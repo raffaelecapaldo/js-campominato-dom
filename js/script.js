@@ -9,7 +9,6 @@ Aggiungere una select accanto al bottone di generazione, che fornisca una scelta
 - con difficoltà 2 => 81 caselle, con un numero compreso tra 1 e 81, divise in 9 caselle per 9 righe;
 - con difficoltà 3 => 49 caselle, con un numero compreso tra 1 e 49, divise in 7 caselle per 7 righe;*/
 const playButton = document.getElementById("play-button")
-
 playButton.addEventListener("click", play);
 
 
@@ -18,17 +17,6 @@ function play() {
     const difficultySelector = document.querySelector("select");
     const grid = document.querySelector(".grid");
     const infoText = document.getElementById("info-text");
-    function generateBombs(bombsNum, squareNumbers) {//Funzione che genera un array di TOT numeri diversi tra loro
-        const bombs = [];//Dichiara array
-        while (bombs.length < bombsNum) {//Finchè l'array non è composto dal quantitativo di numeri voluto
-            const bomb = getRndNumber(1, squareNumbers);//Genera un numero
-            if (!bombs.includes(bomb)) {//Se non è già presente all'interno dell'array
-                bombs.push(bomb);//Aggiungilo all'array
-            }
-        }
-        return bombs;//Ritorna l'array completo
-    }
-
     let points = 0;
     const startAudio = new Audio("effects/start.mp3");
     startAudio.play();
@@ -42,6 +30,17 @@ function play() {
     drawGrid(squareNumbers, squarePerRow, bombs);//Disegna griglia
 
 
+
+    function generateBombs(bombsNum, squareNumbers) {//Funzione che genera un array di TOT numeri diversi tra loro
+        const bombs = [];//Dichiara array
+        while (bombs.length < bombsNum) {//Finchè l'array non è composto dal quantitativo di numeri voluto
+            const bomb = getRndNumber(1, squareNumbers);//Genera un numero
+            if (!bombs.includes(bomb)) {//Se non è già presente all'interno dell'array
+                bombs.push(bomb);//Aggiungilo all'array
+            }
+        }
+        return bombs;//Ritorna l'array completo
+    }
 
     function setMode(difficulty) {//Imposta difficoltà
         let squareNumbers;
@@ -85,9 +84,6 @@ function play() {
 
     function checkSquare() {
         const goodAudio = new Audio("effects/good.mp3")
-
-
-
         this.classList.remove("unchecked");//Toglie unchecked
         this.classList.add("checked");//Mette checked
         this.removeEventListener("click", checkSquare);//Rimuovi event listener per evitare di permettere l'aumento di points ricliccando su un quadrato già checkato
@@ -96,9 +92,10 @@ function play() {
         if (points == MAX_SCORE) {//Se hai raggiunto il punteggio per la vittoria, vinci
             const winEffect = new Audio("effects/win.mp3")
             winEffect.play();
-            infoText.innerHTML = `<span class="text-success fw-bold">HAI VINTO!!!</span>`
+            infoText.innerHTML = `<span class="text-success fw-bold">I tuoi punti: ${points}</span>`//Renderizza di nuovo il punteggio
+            createInfo("Hai vinto!!", "text-success")
             showMines();
-            removeListenrs();
+            removeListeners();
         }
         else {
             infoText.innerHTML = `<span class="text-success fw-bold">I tuoi punti: ${points}</span>`//Renderizza di nuovo il punteggio
@@ -118,7 +115,7 @@ function play() {
         }
     }
 
-    function removeListenrs() {
+    function removeListeners() {
         const squares = document.querySelectorAll(".square");//Adesso rimuovi tutti gli event listener inseriti in precedenza sugli square
         for (onesquare of squares) {
             onesquare.removeEventListener("click", checkSquare);
@@ -130,16 +127,18 @@ function play() {
     function endGame() {
         const endAudio = new Audio("effects/end.mp3")
         showMines();
-        removeListenrs();
-        lost = document.createElement("p");//Aggiungi info hai perso 
-        lost.classList.add("text-danger", "fw-bold", "m-0")
-        lost.innerHTML = `Hai perso, riprova.`;
-        infoText.append(lost);
+        removeListeners();
+        createInfo("Hai perso!", "text-danger")
         points = 0;//Reset punteggio
         endAudio.play();
     }
 
-
+    function createInfo(message, bClass) {
+        p = document.createElement("p");//Aggiungi info hai perso 
+        p.classList.add(bClass, "fw-bold", "m-0")
+        p.innerHTML = message;
+        infoText.append(p);
+    }
 
     //CHEAT 
 
