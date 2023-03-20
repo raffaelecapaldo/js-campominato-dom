@@ -2,14 +2,20 @@ header {
     height: 80px;
 }
 
+
 main {
+    color: white;
     height: calc(100vh - 140px);
     overflow-y: auto;
-    background-color: #e4ca41;
+    background-image: url("../img/landmines.jpg");
+    background-size: cover;
+    background-position: center;
+    position: relative;
 }
 
+
 footer {
-    background-color: green;
+    background-color: #282a2e;
     height: 60px;
 }
 
@@ -28,7 +34,6 @@ footer {
 }
 
 .square {
-    transition: 0.3s;
     width: calc(100% / 10);
     height: calc(100% / 10);
     border: 1px solid black;
@@ -44,19 +49,23 @@ footer {
     display: none;
 }
 
+.bomb,
+.unchecked,
 .checked {
-    background-color: grey;
-    color: white;
+    background-size: contain;
+    background-position: center;
 }
 
+.checked,
 .bomb {
-    background-color: red;
-    color: white;
-    transition: 0s;
+    background-image: url("../img/soilopened.jpg");
+
 }
+
+
 
 .unchecked {
-    background-color: #215068;
+    background-image: url("../img/soil.webp")
 }
 
 

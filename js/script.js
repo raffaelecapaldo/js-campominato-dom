@@ -9,14 +9,25 @@ Aggiungere una select accanto al bottone di generazione, che fornisca una scelta
 - con difficoltà 2 => 81 caselle, con un numero compreso tra 1 e 81, divise in 9 caselle per 9 righe;
 - con difficoltà 3 => 49 caselle, con un numero compreso tra 1 e 49, divise in 7 caselle per 7 righe;*/
 const playButton = document.getElementById("play-button")
-const difficultySelector = document.querySelector("select");
-const grid = document.querySelector(".grid");
-const infoText = document.getElementById("info-text");
+
 playButton.addEventListener("click", play);
 
 
 
 function play() {
+    const difficultySelector = document.querySelector("select");
+    const grid = document.querySelector(".grid");
+    const infoText = document.getElementById("info-text");
+    function generateBombs(bombsNum, squareNumbers) {//Funzione che genera un array di TOT numeri diversi tra loro
+        const bombs = [];//Dichiara array
+        while (bombs.length < bombsNum) {//Finchè l'array non è composto dal quantitativo di numeri voluto
+            const bomb = getRndNumber(1, squareNumbers);//Genera un numero
+            if (!bombs.includes(bomb)) {//Se non è già presente all'interno dell'array
+                bombs.push(bomb);//Aggiungilo all'array
+            }
+        }
+        return bombs;//Ritorna l'array completo
+    }
 
     let points = 0;
     const startAudio = new Audio("effects/start.mp3");
@@ -28,7 +39,6 @@ function play() {
     const NUM_BOMBS = 16;
     const bombs = generateBombs(NUM_BOMBS, squareNumbers);
     const MAX_SCORE = squareNumbers - NUM_BOMBS//Punteggio per la vittoria
-    console.log(MAX_SCORE);
     drawGrid(squareNumbers, squarePerRow, bombs);//Disegna griglia
 
 
@@ -80,7 +90,7 @@ function play() {
 
         this.classList.remove("unchecked");//Toglie unchecked
         this.classList.add("checked");//Mette checked
-        //this.removeEventListener("click", checkSquare);//Rimuovi event listener per evitare di permettere l'aumento di points ricliccando su un quadrato già checkato
+        this.removeEventListener("click", checkSquare);//Rimuovi event listener per evitare di permettere l'aumento di points ricliccando su un quadrato già checkato
 
         points++;//Aumenta di un punto il punteggio
         if (points == MAX_SCORE) {//Se hai raggiunto il punteggio per la vittoria, vinci
@@ -92,7 +102,6 @@ function play() {
         }
         else {
             infoText.innerHTML = `<span class="text-success fw-bold">I tuoi punti: ${points}</span>`//Renderizza di nuovo il punteggio
-            console.log("Hai cliccato la cella numero: " + this.innerText)//Restituisce in console log il suo n 
             goodAudio.play();
         }
     }
@@ -103,7 +112,7 @@ function play() {
             if (box.hasMine) {//Se hanno una mina, aggiungi la classe relativa
                 box.classList.remove("unchecked");
                 box.classList.add("bomb");
-                box.innerHTML = `<img class="minibomb" src="img/mina.webp" alt="">`
+                box.innerHTML = `<img class="minibomb" src="img/mine.png" alt="">`
             }
 
         }
@@ -127,23 +136,15 @@ function play() {
         lost.innerHTML = `Hai perso, riprova.`;
         infoText.append(lost);
         points = 0;//Reset punteggio
-        console.log("Hai perso");
         endAudio.play();
     }
 
 
 
-    function generateBombs(bombsNum, squareNumbers) {//Funzione che genera un array di TOT numeri diversi tra loro
-        const bombs = [];//Dichiara array
-        while (bombs.length < bombsNum) {//Finchè l'array non è composto dal quantitativo di numeri voluto
-            const bomb = getRndNumber(1, squareNumbers);//Genera un numero
-            if (!bombs.includes(bomb)) {//Se non è già presente all'interno dell'array
-                bombs.push(bomb);//Aggiungilo all'array
-            }
-        }
-        console.log(bombs);
-        return bombs;//Ritorna l'array completo
-    }
+    //CHEAT 
+
+    const cheatButton = document.getElementById("cheat");
+    cheatButton.addEventListener("click", showMines);
 
 
 
